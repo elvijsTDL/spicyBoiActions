@@ -70,7 +70,7 @@ async function brickClaimAndStake(channelAddress) {
     const { hash: brickTransaction } = await walletClient.writeContract({
       address: REWARDCONTROLLER_ADDRESS,
       abi: REWARDCONTROLLER_ABI,
-      functionName: "brickClaimForChannel",
+      functionName: "blockClaimForChannel",
       args: [channelAddress],
     });
 
