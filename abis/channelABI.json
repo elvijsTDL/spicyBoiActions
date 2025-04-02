@@ -1,0 +1,556 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "contract ISuperfluid",
+        "name": "host",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ISuperToken",
+        "name": "ethX",
+        "type": "address"
+      },
+      {
+        "internalType": "contract RewardController",
+        "name": "rewardController",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "protocolFeeDestination",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "protocolFeePercentage",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "CFA_INVALID_FLOW_RATE", "type": "error" },
+  { "inputs": [], "name": "INVALID_SUBSCRIPTION_FLOW_RATE", "type": "error" },
+  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
+  { "inputs": [], "name": "NOT_EMERGENCY", "type": "error" },
+  { "inputs": [], "name": "NOT_SUPPORTED", "type": "error" },
+  { "inputs": [], "name": "NO_UNITS_FOR_SUBSCRIBER", "type": "error" },
+  { "inputs": [], "name": "NotAcceptedSuperToken", "type": "error" },
+  { "inputs": [], "name": "NotImplemented", "type": "error" },
+  { "inputs": [], "name": "NotInitializing", "type": "error" },
+  { "inputs": [], "name": "ONLY_FAN_CAN_BE_CALLER", "type": "error" },
+  { "inputs": [], "name": "ONLY_GOV_ALLOWED", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "bits", "type": "uint8" },
+      { "internalType": "int256", "name": "value", "type": "int256" }
+    ],
+    "name": "SafeCastOverflowedIntDowncast",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "int256", "name": "value", "type": "int256" }],
+    "name": "SafeCastOverflowedIntToUint",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "bits", "type": "uint8" },
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "name": "SafeCastOverflowedUintDowncast",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "name": "SafeCastOverflowedUintToInt",
+    "type": "error"
+  },
+  { "inputs": [], "name": "UnauthorizedHost", "type": "error" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "version",
+        "type": "uint64"
+      }
+    ],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "subscriber",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "int96",
+        "name": "flowRate",
+        "type": "int96"
+      }
+    ],
+    "name": "Subscribed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "subscriber",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "int96",
+        "name": "oldFlowRate",
+        "type": "int96"
+      },
+      {
+        "indexed": false,
+        "internalType": "int96",
+        "name": "newFlowRate",
+        "type": "int96"
+      }
+    ],
+    "name": "SubscriptionUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "subscriber",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "UnstakeFailed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "subscriber",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "int96",
+        "name": "previousFlowRate",
+        "type": "int96"
+      }
+    ],
+    "name": "Unsubscribed",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "CFAV1_TYPE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "HOST",
+    "outputs": [
+      { "internalType": "contract ISuperfluid", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PROTOCOL_FEE_DESTINATION",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PROTOCOL_FEE_PERCENTAGE",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "REWARD_CONTROLLER",
+    "outputs": [
+      {
+        "internalType": "contract RewardController",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SUBSCRIPTION_SUPER_TOKEN",
+    "outputs": [
+      { "internalType": "contract ISuperToken", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ISuperToken",
+        "name": "superToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "agreementClass",
+        "type": "address"
+      },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes", "name": "agreementData", "type": "bytes" },
+      { "internalType": "bytes", "name": "", "type": "bytes" },
+      { "internalType": "bytes", "name": "ctx", "type": "bytes" }
+    ],
+    "name": "afterAgreementCreated",
+    "outputs": [{ "internalType": "bytes", "name": "newCtx", "type": "bytes" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ISuperToken",
+        "name": "superToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "agreementClass",
+        "type": "address"
+      },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes", "name": "agreementData", "type": "bytes" },
+      { "internalType": "bytes", "name": "cbdata", "type": "bytes" },
+      { "internalType": "bytes", "name": "ctx", "type": "bytes" }
+    ],
+    "name": "afterAgreementTerminated",
+    "outputs": [{ "internalType": "bytes", "name": "newCtx", "type": "bytes" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ISuperToken",
+        "name": "superToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "agreementClass",
+        "type": "address"
+      },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes", "name": "agreementData", "type": "bytes" },
+      { "internalType": "bytes", "name": "cbdata", "type": "bytes" },
+      { "internalType": "bytes", "name": "ctx", "type": "bytes" }
+    ],
+    "name": "afterAgreementUpdated",
+    "outputs": [{ "internalType": "bytes", "name": "newCtx", "type": "bytes" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract ISuperToken", "name": "", "type": "address" },
+      { "internalType": "address", "name": "", "type": "address" },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes", "name": "", "type": "bytes" },
+      { "internalType": "bytes", "name": "", "type": "bytes" }
+    ],
+    "name": "beforeAgreementCreated",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ISuperToken",
+        "name": "superToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "agreementClass",
+        "type": "address"
+      },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes", "name": "agreementData", "type": "bytes" },
+      { "internalType": "bytes", "name": "", "type": "bytes" }
+    ],
+    "name": "beforeAgreementTerminated",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ISuperToken",
+        "name": "superToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "agreementClass",
+        "type": "address"
+      },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes", "name": "agreementData", "type": "bytes" },
+      { "internalType": "bytes", "name": "", "type": "bytes" }
+    ],
+    "name": "beforeAgreementUpdated",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "int96", "name": "flowRate", "type": "int96" }
+    ],
+    "name": "calculateFlowRateDistribution",
+    "outputs": [
+      {
+        "internalType": "int96",
+        "name": "protocolFeeFlowRate",
+        "type": "int96"
+      },
+      {
+        "internalType": "int96",
+        "name": "creatorFeeFlowRate",
+        "type": "int96"
+      },
+      {
+        "internalType": "int96",
+        "name": "stakersCashbackFlowRate",
+        "type": "int96"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "channelPool",
+    "outputs": [
+      {
+        "internalType": "contract ISuperfluidPool",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "stakeDelta", "type": "uint256" }
+    ],
+    "name": "computePoolUnitsForStake",
+    "outputs": [
+      { "internalType": "uint128", "name": "unitsDelta", "type": "uint128" }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "creatorFeePercentage",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "subscriber", "type": "address" }
+    ],
+    "name": "emergencyCloseStream",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "subscribers",
+        "type": "address[]"
+      }
+    ],
+    "name": "emergencyCloseStreams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "emergencyTransferTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bool", "name": "activateOnCreated", "type": "bool" },
+      { "internalType": "bool", "name": "activateOnUpdated", "type": "bool" },
+      { "internalType": "bool", "name": "activateOnDeleted", "type": "bool" }
+    ],
+    "name": "getConfigWord",
+    "outputs": [
+      { "internalType": "uint256", "name": "configWord", "type": "uint256" }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "int96", "name": "flowRate", "type": "int96" }
+    ],
+    "name": "getRequiredBufferAmount",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStakersCashbackPercentage",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "subscriber", "type": "address" }
+    ],
+    "name": "getSubscriberFlowInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "lastUpdated", "type": "uint256" },
+      { "internalType": "int96", "name": "flowRate", "type": "int96" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalInflowRate",
+    "outputs": [{ "internalType": "int96", "name": "", "type": "int96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_owner", "type": "address" },
+      { "internalType": "int96", "name": "_flowRate", "type": "int96" },
+      { "internalType": "uint256", "name": "_creatorFeePct", "type": "uint256" }
+    ],
+    "name": "initialize",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "channelPoolAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ISuperToken",
+        "name": "superToken",
+        "type": "address"
+      }
+    ],
+    "name": "isAcceptedSuperToken",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staker", "type": "address" },
+      { "internalType": "uint256", "name": "newStakeAmount", "type": "uint256" }
+    ],
+    "name": "onStakeChange",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bool", "name": "activateOnCreated", "type": "bool" },
+      { "internalType": "bool", "name": "activateOnUpdated", "type": "bool" },
+      { "internalType": "bool", "name": "activateOnDeleted", "type": "bool" }
+    ],
+    "name": "selfRegister",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "subscriptionFlowRate",
+    "outputs": [{ "internalType": "int96", "name": "", "type": "int96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "user", "type": "address" }
+    ],
+    "name": "userDeposits",
+    "outputs": [
+      { "internalType": "uint256", "name": "deposit", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

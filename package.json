@@ -1,0 +1,18 @@
+{
+  "name": "superfluid-address-processor",
+  "version": "1.0.0",
+  "description": "Script to process Ethereum addresses from CSV and execute transactions on Base Mainnet",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "fs": "^0.0.1-security",
+    "node-fetch": "^3.3.2",
+    "viem": "^2.0.0"
+  }
+}
