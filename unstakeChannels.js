@@ -48,7 +48,7 @@ async function unstakeFromChannels(channelAddress) {
       };
     }
 
-    const { hash: unstakeTxHash } = await walletClient.writeContract({
+    const unstakeTxHash = await walletClient.writeContract({
       address: REWARDCONTROLLER_ADDRESS,
       abi: REWARDCONTROLLER_ABI,
       functionName: "unstake",
