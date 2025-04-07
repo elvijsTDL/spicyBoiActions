@@ -150,10 +150,9 @@ async function processAddresses(csvFilePath) {
               abi: channelABI,
               functionName: "owner",
             });
-
             resultRow.profileAddress = channelOwner;
 
-            // const tradingAddress = await fetchDataFromAPI(channelOwner);
+            const tradingAddress = await fetchDataFromAPI(channelOwner);
             if (tradingAddress) {
               resultRow.tradingAddress = tradingAddress;
 
