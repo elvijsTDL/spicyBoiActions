@@ -6,8 +6,8 @@ import fs from "fs";
 import { createObjectCsvWriter } from "csv-writer";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
-import { rewardController } from "./abis/rewardController.json";
-import { channelABI } from "./abis/channelABI.json";
+import rewardController from "./abis/rewardController.json" assert { type: "json" };
+import channelABI from "./abis/channelABI.json" assert { type: "json" };
 dotenv.config();
 
 const RPC_URL = "https://rpc-endpoints.superfluid.dev/base-mainnet";

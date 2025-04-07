@@ -5,7 +5,7 @@ import csv from "csv-parser";
 import fs from "fs";
 import { createObjectCsvWriter } from "csv-writer";
 import dotenv from "dotenv";
-import { rewardController } from "./abis/rewardController.json";
+import rewardController from "./abis/rewardController.json" assert { type: "json" };
 
 dotenv.config();
 
