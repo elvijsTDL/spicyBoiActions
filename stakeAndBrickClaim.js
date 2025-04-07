@@ -153,11 +153,11 @@ async function processAddresses(csvFilePath) {
 
             resultRow.profileAddress = channelOwner;
 
-            const tradingAddress = await fetchDataFromAPI(channelOwner);
+            // const tradingAddress = await fetchDataFromAPI(channelOwner);
             if (tradingAddress) {
               resultRow.tradingAddress = tradingAddress;
 
-              const receipt = await brickClaimAndStake(tradingAddress);
+              const receipt = await brickClaimAndStake(channelAddress);
               if (receipt) {
                 resultRow.brickTxHash = receipt.brickTxHash;
                 resultRow.stakeTxHash = receipt.stakeTxHash;
